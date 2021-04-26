@@ -1,0 +1,17 @@
+.Title {
+  text-align: center;
+  width: 30%;
+  margin: 0 auto;
+  background: var(--background--button-theme);
+  border-radius: 26px;
+  h1{
+    cursor: default;
+    margin: 0;
+    font-weight: bold;
+    color: var(--color-title);
+  }
+  span {
+    font-weight: 300;
+    color: var(--background--body);
+  }
+}
