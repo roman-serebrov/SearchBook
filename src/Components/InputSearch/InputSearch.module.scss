@@ -17,6 +17,14 @@
       cursor: pointer;
     }
   }
-
-
-}
+  .books__list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 20px auto;
+  }
+  .pagination {
+    display: flex;
+    background: white;
+  }
+ }

@@ -1,4 +1,3 @@
-import {theme} from '../../utils/utils'
 import {connect} from "react-redux";
 import classes from './Button.module.scss'
 import {renderTheme} from "../../redux/actionType";

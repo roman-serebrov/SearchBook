@@ -1,0 +1,40 @@
+.BookInfo {
+  background: white;
+  box-sizing: content-box;
+  width: 200px;
+  max-height: 400px;
+  margin: 20px 0;
+  border-radius: 6px;
+  .img{
+    margin: 10px;
+    padding: 0;
+    position: relative;
+    width:180px;
+    height:200px;
+    background: #c2c2c2;
+    border: 1px solid #000;
+    border-radius:3px;
+  }
+
+  .img img{
+    position: absolute;
+    left:50%;
+    top:50%;
+    transform: translate(-50%, -50%);
+    max-width:100%;
+    max-height: 100%;
+  }
+  .name__book, .author {
+    display: flex;
+    flex-direction: column;
+    margin: 0 10px;
+    font-weight: 300;
+    p {
+      margin: 0;
+    }
+    span {
+      font-weight: 700;
+    }
+  }
+}
+

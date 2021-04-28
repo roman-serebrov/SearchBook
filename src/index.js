@@ -7,7 +7,7 @@ import {Provider} from "react-redux";
 import App from "./App";
 
 
-const state = store.getState()
+// const state = store.getState()
 
 ReactDOM.render(
   <React.StrictMode>
