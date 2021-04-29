@@ -1,5 +1,5 @@
 import {CURRENT__BOOK, GET__BOOKS, LOADING_BOOK, PAGINATION__COUNT} from "./types";
-import {getBooksAction, loadingBooks} from "../redux/actionType";
+import {getBooksAction, loadingBooks, paginationPages} from "../redux/actionType";
 import {BooksAPI} from "../API/api";
 
 const {THEME__RENDER} = require("./types");
@@ -39,7 +39,8 @@ function appReducer(state = initialState, action) {
             console.log(action.books);
             return {
                 ...state,
-                books: [...action.books]
+                books: [...action.books],
+                isLoading: true
             }
         }
         case CURRENT__BOOK: {
@@ -53,12 +54,11 @@ function appReducer(state = initialState, action) {
 }
 
 export const thunkGetBook = book => async dispatch => { // делает запрос на сервер
-    console.log(book);
     await dispatch(loadingBooks())
     const books = await BooksAPI.getBook(book)
-    console.log(books);
-    // if (books.status === 200) {
-    //     await dispatch(getBooksAction(books.data.docs))
-    // }
+    if (books.status === 200) {
+        await dispatch(paginationPages(Math.ceil(books.data.num_found / books.data.docs.length)))
+        await dispatch(getBooksAction(books.data.docs))
+    }
 }
 export default appReducer

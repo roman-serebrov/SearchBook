@@ -3,3 +3,20 @@
   flex-direction: row;
   justify-content: flex-end;
 }
+.books__list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin: 20px auto;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  button {
+    margin: 10px;
+    border-radius: 100%;
+    border: none;
+    padding: 10px 12px;
+    cursor: pointer;
+  }
+}

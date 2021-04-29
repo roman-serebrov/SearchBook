@@ -32,7 +32,15 @@ function InputSearch(props) {
        }, ITEMS_PER_PAGE)
    }
     useEffect(() => {
-        props.getCurrentBook(book) // записываем в состояние название книги которое ищем
+        if (book === '') {
+            return
+        }
+        props.getCurrentBook(book)
+        return () => {
+            console.log('unmounte')
+            props.getCurrentBook(book)
+        }
+        // записываем в состояние название книги которое ищем
     },[book])
 
 
@@ -52,7 +60,8 @@ const mapStateToProps = state => {
     return {
         theme: state.app.theme,
         pagesCount: state.app.pagesCount,
-        books: state.app.books
+        books: state.app.books,
+        currentBook: state.app.currentBook
     }
 }
 const mapDispatchToProps = dispatch => {
