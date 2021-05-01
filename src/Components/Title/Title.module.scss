@@ -1,9 +1,9 @@
 .Title {
   text-align: center;
-  width: 30%;
-  margin: 0 auto;
-  background: var(--background--button-theme);
-  border-radius: 26px;
+  width: 50%;
+  margin: 20px auto;
+  background: white;
+  border-radius: 6px;
   h1{
     cursor: default;
     margin: 0;
@@ -12,6 +12,6 @@
   }
   span {
     font-weight: 300;
-    color: var(--background--body);
+    color: var(--color-title);
   }
 }

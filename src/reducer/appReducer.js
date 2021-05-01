@@ -5,7 +5,6 @@ import {BooksAPI} from "../API/api";
 const {THEME__RENDER} = require("./types");
 //состояние приложения
 const initialState = {
-    theme: 'theme__dark',
     title: '!Search',
     subtitle: 'Book',
     emoji: '../../images/baseline_search_white_24dp.png',
@@ -24,6 +23,7 @@ function appReducer(state = initialState, action) {
             }
         }
         case PAGINATION__COUNT: {
+            let field = 'pagesCount'
             return {
                 ...state,
                 pagesCount: action.count
@@ -36,7 +36,6 @@ function appReducer(state = initialState, action) {
             }
         }
         case GET__BOOKS: {
-            console.log(action.books);
             return {
                 ...state,
                 books: [...action.books],

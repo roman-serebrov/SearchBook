@@ -4,10 +4,13 @@
     display: flex;
     justify-content: center;
   input {
-    width: 40%;
+    width: 46%;
     display: block;
-    height: 24px;
+    height: 34px;
     outline: none;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
   }
     .button__search {
       display: block;

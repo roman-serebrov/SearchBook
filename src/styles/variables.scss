@@ -1,12 +1,7 @@
-body.theme__light {
-  --background--body: #fff;
+body {
+  --background--body: lightgray;
   --background--button-theme: #000;
-  --color-title: #E83B89;
-}
-body.theme__dark {
-  --background--body: #000;
-  --color-title: #E83B89;
-  --background--button-theme: #fff;
+  --color-title: #51a4ce;
 }
 
 

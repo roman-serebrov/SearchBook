@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import classes from './styles/App.module.scss'
 import {connect} from "react-redux";
-import ButtonRenderTheme from "./Components/ButtonRenderTheme/Button";
 import Title from "./Components/Title/Title";
 import InputSearch from "./Components/InputSearch/InputSearch";
 import {thunkGetBook} from "./reducer/appReducer";
@@ -11,36 +10,28 @@ import BookInfo from "./Components/BookInfo/BookInfo";
 
 function App(props) {
     const [paginationPages, setPagination] = useState([])
-
     useEffect(() => {
         if (props.pagesCount) {
             for (let i = 0; i < props.pagesCount; i++) {
-                paginationPages.push(i)
+                paginationPages[i] = i
             }
         }
-    },[props.pagesCount])
-    console.log(paginationPages);
+     },[props.pagesCount])
+
+    console.log(paginationPages.length);
     useEffect(() => {
+        console.log('запрос на серевер mount')
             if (props.currentBook === '') {
                 return
             }
             props.thunkGetBook(props.currentBook)
                 return () => {
+                    console.log('запрос на серевер unmount')
                     props.thunkGetBook(props.currentBook)
                 }
             }, [props.currentBook])
-    // если у нас есть назание книги вызываем функцию thunkGetBook
-    // useEffect(() => {
-    //     return () => {
-    //         props.thunkGetBook(props.currentBook)
-    //     }
-    // }, [props.currentBook])
-    document.body.className = props.theme
     return (
         <div className="App">
-            <div className={classes.RenderThemeBlock}>
-                <ButtonRenderTheme />
-            </div>
             <Title />
             <InputSearch />
             <div className={classes.books__list}>
@@ -50,12 +41,11 @@ function App(props) {
                 })}
             </div>
             <div className={classes.pagination}>
-                {paginationPages.length ? paginationPages.map((value, index) =>  {
-                    console.log(value, 'val')
+                {paginationPages.length ? paginationPages.slice(0, 10).map((value, index) =>  {
                     return (
                         <button key={index}>{value + 1}</button>
                     )
-                }) : []}
+                })  : [] }
             </div>
         </div>
 
@@ -63,7 +53,6 @@ function App(props) {
 }
 const mapStateToProps = state => {
     return {
-        theme: state.app.theme,
         currentBook: state.app.currentBook,
         books: state.app.books,
         isLoading: state.app.isLoading,

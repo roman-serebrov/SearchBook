@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import classes from './InputSearch.module.scss'
 import {connect} from "react-redux";
 import searchIcon from '../../images/baseline_search_white_24dp.png'
-import searchIconBlack from '../../images/baseline_search_black_24dp.png'
 import {currentBook} from "../../redux/actionType";
 let timer = null;
+const ITEMS_PER_PAGE = 1000;
+
 const debounce = (callback, time) => {
     if (!timer) {
         timer = setTimeout(() => {
@@ -19,7 +20,8 @@ const debounce = (callback, time) => {
         }, time);
     }
 };
-const ITEMS_PER_PAGE = 1000;
+
+
 function InputSearch(props) {
     const [book, setBooks] = useState('')
    const getBook = (e) => {
@@ -37,7 +39,6 @@ function InputSearch(props) {
         }
         props.getCurrentBook(book)
         return () => {
-            console.log('unmounte')
             props.getCurrentBook(book)
         }
         // записываем в состояние название книги которое ищем
@@ -49,7 +50,7 @@ function InputSearch(props) {
             <form action="">
                 <input onInput={getBook} autoFocus={true} type="text" />
                 <button className={classes.button__search}>
-                    <img src={props.theme.endsWith('__dark') ? searchIcon : searchIconBlack} alt="search_input" />
+                    <img src={searchIcon} alt="search_input" />
                 </button>
             </form>
         </div>
