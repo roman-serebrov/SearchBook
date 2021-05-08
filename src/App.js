@@ -1,68 +1,57 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import classes from './styles/App.module.scss'
 import {connect} from "react-redux";
 import Title from "./Components/Title/Title";
 import InputSearch from "./Components/InputSearch/InputSearch";
 import {thunkGetBook} from "./reducer/appReducer";
-import Loader from "./Components/Loader/loader";
-import BookInfo from "./Components/BookInfo/BookInfo";
+import BookList from "./Components/BookList/BookList";
+import Pagination from "./Components/Paginatino/Pagination";
+import ModalWindow from "./UI/modal_window";
+
+
+
 
 
 function App(props) {
-    const [paginationPages, setPagination] = useState([])
+    const [initialInput, setInitialInput] = useState('');
+    const [initialPage, setInitialPage] = useState(1)
+    const [modalActive, setModal] = useState(false)
+
     useEffect(() => {
-        if (props.pagesCount) {
-            for (let i = 0; i < props.pagesCount; i++) {
-                paginationPages[i] = i
-            }
+        let { book, page } = window.location.search.slice(1).split('&').map(v => v.split('=')).reduce((a, b) => ({...a, [b[0]]: b[1]}), {});
+        if (book) {
+            book = decodeURI(book);
         }
-     },[props.pagesCount])
+        setInitialInput(book || '');
+        setInitialPage(page ? parseInt(page) : 1);
+        props.thunkGetBook(book, page);
+    }, []);
 
-    console.log(paginationPages.length);
-    useEffect(() => {
-        console.log('запрос на серевер mount')
-            if (props.currentBook === '') {
-                return
-            }
-            props.thunkGetBook(props.currentBook)
-                return () => {
-                    console.log('запрос на серевер unmount')
-                    props.thunkGetBook(props.currentBook)
-                }
-            }, [props.currentBook])
+     const updateResultsByPage = useCallback((page) => props.thunkGetBook(props.currentBook, page), [props.currentBook])
+
     return (
-        <div className="App">
+        <div className={"App"}>
             <Title />
-            <InputSearch />
-            <div className={classes.books__list}>
-                {props.isLoading !== true ? <Loader /> :
-                    props.books.map(({cover_i, author_name, title}, index) => {
-                   return <BookInfo cover_i={cover_i} title={title} author_name={author_name} key={index}/>
-                })}
-            </div>
-            <div className={classes.pagination}>
-                {paginationPages.length ? paginationPages.slice(0, 10).map((value, index) =>  {
-                    return (
-                        <button key={index}>{value + 1}</button>
-                    )
-                })  : [] }
-            </div>
+            <InputSearch onSearch={props.thunkGetBook} initialValue={initialInput} />
+           <BookList setModal={setModal}/>
+            <Pagination  initialPage={initialPage} onPageChanged={updateResultsByPage}/>
+            <ModalWindow  cover={props.cover} active={modalActive} setActive={setModal} description={props.description}/>
         </div>
-
       );
 }
 const mapStateToProps = state => {
     return {
         currentBook: state.app.currentBook,
-        books: state.app.books,
         isLoading: state.app.isLoading,
-        pagesCount: state.app.pagesCount
+        pagesCount: state.app.pagesCount,
+        description: state.app.description,
+        cover: state.app.cover
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        thunkGetBook: book => dispatch(thunkGetBook(book))
+        thunkGetBook: (book, page)=> dispatch(thunkGetBook(book, page))
     }
 }
 

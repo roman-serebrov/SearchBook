@@ -1,8 +1,7 @@
-import {CURRENT__BOOK, GET__BOOKS, LOADING_BOOK, PAGINATION__COUNT} from "./types";
-import {getBooksAction, loadingBooks, paginationPages} from "../redux/actionType";
+import {COVER__BOOK, CURRENT__BOOK, DESCRIPTION__BOOK, GET__BOOKS, LOADING_BOOK, PAGINATION__COUNT} from "./types";
+import {currentBook, getBooksAction, loadingBooks, paginationPages} from "../redux/actionType";
 import {BooksAPI} from "../API/api";
 
-const {THEME__RENDER} = require("./types");
 //состояние приложения
 const initialState = {
     title: '!Search',
@@ -12,18 +11,13 @@ const initialState = {
     pagesCount: 0,
     isLoading: true,
     books: [], // массив книг полученных из поиска
-    currentBook: ''// книги по которой проходит поиск
+    currentBook: '',// книги по которой проходит поиск
+    description: {},
+    cover: ''
 }
 function appReducer(state = initialState, action) {
     switch (action.type) {
-        case THEME__RENDER:{
-            return {
-                ...state,
-                theme: action.theme
-            }
-        }
         case PAGINATION__COUNT: {
-            let field = 'pagesCount'
             return {
                 ...state,
                 pagesCount: action.count
@@ -48,16 +42,39 @@ function appReducer(state = initialState, action) {
                 currentBook: action.book
             }
         }
+        case DESCRIPTION__BOOK: {
+            return {
+                ...state,
+                description: action.description,
+            }
+        }
+        case COVER__BOOK: {
+            return {
+                ...state,
+                cover: action.cover_i
+            }
+        }
         default: return state
     }
 }
 
-export const thunkGetBook = book => async dispatch => { // делает запрос на сервер
-    await dispatch(loadingBooks())
-    const books = await BooksAPI.getBook(book)
+export const thunkGetBook = (book, page = 1) => async dispatch => { // делает запрос на сервер
+    if (!book) {
+        await dispatch(getBooksAction([]))
+        return
+    }
+    await dispatch(currentBook(book));
+    dispatch(loadingBooks())
+    const books = await BooksAPI.getBooks(book, page)
     if (books.status === 200) {
-        await dispatch(paginationPages(Math.ceil(books.data.num_found / books.data.docs.length)))
-        await dispatch(getBooksAction(books.data.docs))
+        const page = Math.ceil(books.data.num_found / books.data.docs.length)
+        if (isFinite(page)) {
+            await dispatch(paginationPages(page))
+            await dispatch(getBooksAction(books.data.docs))
+        } else {
+            await dispatch(paginationPages(0))
+            await dispatch(getBooksAction([]))
+        }
     }
 }
 export default appReducer
