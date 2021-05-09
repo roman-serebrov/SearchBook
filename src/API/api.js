@@ -22,6 +22,6 @@ export const BooksAPI = {
     },
     getCover(cover_i, size) {
         console.log(cover_i);
-        return  cacheableGet(`/b/id/${cover_i}-${size}.jpg`)
+        return  cacheableGet(`/b/id${cover_i}-${size}.jpg`)
     }
 }

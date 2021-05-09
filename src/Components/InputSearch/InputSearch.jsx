@@ -23,15 +23,17 @@ const debounce = (callback, time) => {
 
 function InputSearch(props) {
 
-   const getBook = (e) => {
+    const getBook = (e) => {
        debounce( () => {
             props.onSearch(e.target.value)
        }, ITEMS_PER_PAGE)
    }
     const searchPress = useCallback(e => {
-        if(e.key === 'Enter' || e.target.dataset.search) {
+        if(e.key === 'Enter') {
             e.preventDefault()
             props.onSearch(e.target.value)
+        } else if (e.target.dataset.search) {
+            e.preventDefault()
         }
     }, [])
 
@@ -47,4 +49,8 @@ function InputSearch(props) {
         </div>
     )
 }
-export default connect()(InputSearch)
+
+const mapStateToProps = state => ({
+    currentBook: state.app.currentBook
+})
+export default connect(mapStateToProps)(InputSearch)
