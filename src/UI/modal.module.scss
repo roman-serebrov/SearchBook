@@ -1,0 +1,80 @@
+.modal {
+  &_overlay {
+    background: rgba(0,0,0 ,.5);
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: 0.5s;
+
+    &.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+  }
+
+  &_content {
+    padding: 15px;
+    border-radius: 6px;
+    background: aliceblue;
+    transform: scale(0.5);
+    transition: 0.4s all;
+    width: 270vh;
+    height: 100vh;
+
+    &.active {
+      transform: scale(1);
+    }
+  }
+
+  &_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+  }
+
+  &_info_book {
+    display: flex;
+  }
+
+  &_description {
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px;
+    overflow-y: scroll;
+    width: 850px;
+    height: 490px;
+
+    hr {
+      width: 100%;
+    }
+
+    p {
+      font-size: 28px;
+      white-space: pre-wrap;
+      font-weight: 300;
+    }
+    h2 {
+      font-size: 44px;
+      margin: 0;
+      color: var(--color-title);
+    }
+    li {
+      font-size: 24px;
+    }
+  }
+
+  &_close {
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 6px;
+    font-size: 44px;
+  }
+}

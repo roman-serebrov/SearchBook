@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import classes from './styles/App.module.scss'
 import {connect} from "react-redux";
 import Title from "./Components/Title/Title";
 import InputSearch from "./Components/InputSearch/InputSearch";
@@ -34,7 +33,7 @@ function App(props) {
             <Title />
             <InputSearch onSearch={props.thunkGetBook} initialValue={initialInput} />
            <BookList setModal={setModal}/>
-            <Pagination  initialPage={initialPage} onPageChanged={updateResultsByPage}/>
+            <Pagination  initialPage={initialPage} onPageChanged={updateResultsByPage} />
             <ModalWindow  cover={props.cover} active={modalActive} setActive={setModal} description={props.description}/>
         </div>
       );

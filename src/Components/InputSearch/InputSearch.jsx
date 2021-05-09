@@ -1,6 +1,7 @@
 import classes from './InputSearch.module.scss'
 import {connect} from "react-redux";
 import searchIcon from '../../images/baseline_search_white_24dp.png'
+import {useCallback} from "react";
 let timer = null;
 const ITEMS_PER_PAGE = 1000;
 
@@ -27,13 +28,20 @@ function InputSearch(props) {
             props.onSearch(e.target.value)
        }, ITEMS_PER_PAGE)
    }
+    const searchPress = useCallback(e => {
+        if(e.key === 'Enter' || e.target.dataset.search) {
+            e.preventDefault()
+            props.onSearch(e.target.value)
+        }
+    }, [])
+
 
     return(
         <div className={classes.InputSearch}>
             <form action="">
-                <input onInput={getBook} autoFocus={true} type="text" defaultValue={props.initialValue}/>
+                <input onKeyPress={searchPress} onInput={getBook} autoFocus={true} type="text" defaultValue={props.initialValue}/>
                 <button className={classes.button__search}>
-                    <img src={searchIcon} alt="search_input" />
+                    <img onClick={searchPress} src={searchIcon} alt="search_input" data-search/>
                 </button>
             </form>
         </div>

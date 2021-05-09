@@ -1,28 +1,47 @@
-import React, {useState} from "react";
-import classes from "./modal.css";
-import default_cover from "../images/default-cover.png";
+import ReactMarkdown from "react-markdown";
+import classes from "./modal.module.scss";
+import Cover from "../Components/Cover/Cover";
+import {connect} from "react-redux";
+import {setModal} from "../redux/actionType";
+import {useCallback} from "react";
 
-function ModalWindow({active, setActive, description, cover}) {
-    if (Object.keys(description).length === 0 && cover === '') {
-        return null;
-    }
-    console.log(description, cover)
+function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+const Description = ({data, title}) => {
+    const description = data?.value || 'Нет описания'
+    title = capitalize(title)
     return (
-        <div className={active ? "modal_overlay active" : "modal_overlay"} onClick={() => setActive(false)}>
-            <div className={active ? "modal_content active" : "modal_content"} onClick={e => e.stopPropagation()}>
-                <div className={"modal_info_book"}>
-                    <div className={"modal_header"}>
-                        <img className={classes.img} src={cover ? `http://covers.openlibrary.org/b/id/${cover}-M.jpg` : default_cover} alt="search_book"/>
-                        <h2>TITLE</h2>
-                        <span onClick={() => setActive(false)} className="modal_close" data-close="true">&times;</span>
+        <div className={classes.modal_description}>
+            <h2>{title}</h2>
+            <ReactMarkdown>{description}</ReactMarkdown>
+        </div>
+    )
+}
+function ModalWindow({active, closeModal, description, cover, title}) {
+    const preventClick = useCallback(e => e.stopPropagation(), [])
+    return (
+        <div className={active ? `${classes.modal_overlay} ${classes.active}` : `${classes.modal_overlay}`} onClick={closeModal}>
+            <div className={active ? `${classes.modal_content} ${active}` : `${classes.modal_content}`} onClick={preventClick}>
+                <div className={classes.modal_info_book}>
+                    <div className={classes.modal_header}>
+                        <Cover id={cover} size={'L'}/>
+                        <span onClick={closeModal} className={classes.modal_close} data-close="true">&times;</span>
                     </div>
-                    <div className={"modal_description"}>
-                        <p>{description.value}</p>
-                    </div>
+                    <Description data={description} title={title}/>
                 </div>
             </div>
         </div>
     )
 }
-
-export default ModalWindow
+const mapStateToProps = state => ({
+    active: state.app.isModalActive,
+    description: state.app.description,
+    cover: state.app.cover,
+    title: state.app.titleBook
+})
+const mapDispatchToProps = dispatch => ({
+    closeModal: () => dispatch(setModal(false))
+})
+export default connect(mapStateToProps, mapDispatchToProps)(ModalWindow)

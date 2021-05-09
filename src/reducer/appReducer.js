@@ -1,8 +1,24 @@
-import {COVER__BOOK, CURRENT__BOOK, DESCRIPTION__BOOK, GET__BOOKS, LOADING_BOOK, PAGINATION__COUNT} from "./types";
-import {currentBook, getBooksAction, loadingBooks, paginationPages} from "../redux/actionType";
+import {
+    CHANGE__MODAL__ACTIVE,
+    COVER__BOOK,
+    CURRENT__BOOK,
+    DESCRIPTION__BOOK,
+    GET__BOOKS,
+    LOADING_BOOK,
+    PAGINATION__COUNT, SET__TITLE__BOOK
+} from "./types";
+import {
+    coverBook,
+    currentBook,
+    descriptionBook,
+    getBooksAction,
+    loadingBooks,
+    paginationPages, setModal, setTitleBook
+} from "../redux/actionType";
 import {BooksAPI} from "../API/api";
 
 //состояние приложения
+
 const initialState = {
     title: '!Search',
     subtitle: 'Book',
@@ -10,13 +26,27 @@ const initialState = {
     currentPage: 1,
     pagesCount: 0,
     isLoading: true,
-    books: [], // массив книг полученных из поиска
-    currentBook: '',// книги по которой проходит поиск
+    books: [],
+    currentBook: '',
     description: {},
-    cover: ''
+    cover: '',
+    isModalActive: false,
+    titleBook: ''
 }
 function appReducer(state = initialState, action) {
     switch (action.type) {
+        case CHANGE__MODAL__ACTIVE: {
+            return {
+                ...state,
+                isModalActive: action.isActive
+            }
+        }
+        case SET__TITLE__BOOK: {
+            return {
+                ...state,
+                titleBook: action.title
+            }
+        }
         case PAGINATION__COUNT: {
             return {
                 ...state,
@@ -58,10 +88,13 @@ function appReducer(state = initialState, action) {
     }
 }
 
-export const thunkGetBook = (book, page = 1) => async dispatch => { // делает запрос на сервер
+export const thunkGetBook = (book, page = 1) => async dispatch => {
     if (!book) {
+        await dispatch(paginationPages(0))
         await dispatch(getBooksAction([]))
+        window.history.pushState({}, '', `/`);
         return
+
     }
     await dispatch(currentBook(book));
     dispatch(loadingBooks())
@@ -77,4 +110,12 @@ export const thunkGetBook = (book, page = 1) => async dispatch => { // дела�
         }
     }
 }
+
+export const getBookCall = (authorKey, cover, title) => async dispatch => {
+    const book  = await BooksAPI.getBook(authorKey);
+    dispatch(coverBook(cover));
+    dispatch(setTitleBook(title))
+    dispatch(descriptionBook(book.data.description));
+    dispatch(setModal(true));
+};
 export default appReducer

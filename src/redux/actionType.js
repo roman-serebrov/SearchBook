@@ -1,10 +1,11 @@
 import {
+    CHANGE__MODAL__ACTIVE,
     COVER__BOOK,
     CURRENT__BOOK,
     DESCRIPTION__BOOK,
     GET__BOOKS,
     LOADING_BOOK,
-    PAGINATION__COUNT,
+    PAGINATION__COUNT, SET__TITLE__BOOK,
     THEME__RENDER
 }
     from "../reducer/types";
@@ -54,5 +55,19 @@ export function coverBook(cover_i) {
     return {
         type: COVER__BOOK,
         cover_i
+    }
+}
+
+export function setModal(isActive) {
+    return {
+        type: CHANGE__MODAL__ACTIVE,
+        isActive
+    }
+}
+
+export function setTitleBook(title) {
+    return {
+        type: SET__TITLE__BOOK,
+        title
     }
 }

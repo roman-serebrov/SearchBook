@@ -38,5 +38,19 @@
       color: var(--color-title);
     }
   }
+  .InfoBlock {
+    display: flex;
+    flex-direction: column;
+    margin: 0 10px;
+    font-weight: 300;
+    p {
+      margin: 0;
+      font-weight: 500;
+    }
+    span {
+      font-weight: 300;
+      color: var(--color-title);
+    }
+  }
 }
 

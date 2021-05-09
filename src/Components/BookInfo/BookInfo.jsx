@@ -1,33 +1,33 @@
+import { useCallback } from "react";
 import classes from './BookInfo.module.scss'
-import default_cover from '../../images/default-cover.png'
 import {connect} from "react-redux";
-import {BooksAPI} from "../../API/api";
+import Cover from "../Cover/Cover";
+import {getBookCall} from "../../reducer/appReducer";
 
 
-function BookInfo ({author_key, author_name, cover_i, title, setModal, descriptionBook, coverBook}, index) {
+
+const InfoBlock = ({title, subTitle}) => {
+    return (
+        <div className={classes.InfoBlock}>
+            <span>{title}:</span><p>{subTitle}</p>
+        </div>
+    )
+}
+
+function BookInfo ({author_key, author_name, cover_i, title, openModal}, index) {
     let subTitle = title.length > 17 ? title.substr(0, 17) + '...' : title
     let author = author_name ? author_name[0] : 'нет автора'
 
-  async function openModelWindow (e, author_key, setModal, cover_i) {
-        e.preventDefault()
-        const book = await BooksAPI.getBook(author_key)
-        console.log(book);
-        await coverBook(cover_i)
-        await descriptionBook(book.data.description)
-        await setModal(true)
-    }
+  const  openModelWindow = useCallback(e => {
+      e.preventDefault()
+      openModal(author_key, cover_i, title)
+  }, [author_key, cover_i])
 
     return (
-        <div key={index} className={classes.BookInfo}>
-            <div>
-                <img className={classes.img} src={cover_i ? `http://covers.openlibrary.org/b/id/${cover_i}-M.jpg` : default_cover} alt="search_book"/>
-            </div>
-            <div className={classes.name__book}>
-                <span>Название книги:</span><a onClick={e => openModelWindow(e, author_key, setModal, cover_i)} href=""> {subTitle}</a>
-            </div>
-            <div className={classes.author}>
-                <span>Автор:</span><p>{author}</p>
-            </div>
+        <div key={index} className={classes.BookInfo} onClick={openModelWindow}>
+                <Cover className={classes.img} id={cover_i} alt={subTitle} width={180} height={200}/>
+            <InfoBlock title="Название книги" subTitle={subTitle}/>
+            <InfoBlock title="автор" subTitle={author}/>
         </div>
 
     )
@@ -36,6 +36,10 @@ const mapStateToProps = state => {
     return {
         books: state.app.books,
         isLoading: state.app.isLoading,
+        titleBook: state.app.titleBook
     }
 }
-export default connect(mapStateToProps)(BookInfo)
+const mapDispatchToProps = dispatch => ({
+    openModal: (authorKey, cover, title) => dispatch(getBookCall(authorKey, cover, title)),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(BookInfo)

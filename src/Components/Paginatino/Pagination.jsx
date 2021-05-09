@@ -21,7 +21,7 @@ const Pagination = (props) => {
     const updateStart = (value) => () =>  {
         setCurrentPage(value)
 
-        if (props.pagesCount <= 10) {
+        if (props.pagesCount <= 10 )  {
             return;
         }
 
@@ -60,6 +60,7 @@ const mapStateToProps = (state) => {
     return {
         pagesCount: state.app.pagesCount,
         isLoading: state.app.isLoading,
+        currentBook: state.app.currentBook
     }
 }
 export default connect(mapStateToProps)(Pagination)
